@@ -197,11 +197,11 @@ describe("AgentPhoneAdapter", () => {
       const res = await adapter.handleWebhook(req);
       expect(res.status).toBe(200);
       expect(mockChat.processReaction).toHaveBeenCalledOnce();
-      expect(mockChat.processReaction).toHaveBeenCalledWith(
-        adapter,
-        "msg_003",
-        { emoji: "love", userId: "+15551234567" }
-      );
+      const call = (mockChat.processReaction as ReturnType<typeof vi.fn>).mock.calls[0]![0];
+      expect(call.messageId).toBe("msg_003");
+      expect(call.rawEmoji).toBe("love");
+      expect(call.user.userId).toBe("+15551234567");
+      expect(call.added).toBe(true);
     });
 
     it("ignores outbound messages", async () => {

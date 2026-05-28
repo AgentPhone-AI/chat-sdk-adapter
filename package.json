@@ -6,11 +6,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/agentphone/chat-sdk-adapter.git"
+    "url": "https://github.com/AgentPhone-AI/chat-sdk-adapter.git"
   },
   "homepage": "https://agentphone.to",
   "bugs": {
-    "url": "https://github.com/agentphone/chat-sdk-adapter/issues"
+    "url": "https://github.com/AgentPhone-AI/chat-sdk-adapter/issues"
   },
   "keywords": [
     "chat-sdk",

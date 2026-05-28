@@ -231,9 +231,27 @@ export class AgentPhoneAdapter
       return new Response("OK", { status: 200 });
     }
 
-    this.chat!.processReaction(this, data.messageId, {
-      emoji: data.reactionType,
-      userId: data.fromNumber,
+    const emojiValue = {
+      name: data.reactionType,
+      toJSON: () => data.reactionType,
+      toString: () => data.reactionType,
+    };
+
+    this.chat!.processReaction({
+      adapter: this,
+      added: true,
+      emoji: emojiValue,
+      rawEmoji: data.reactionType,
+      messageId: data.messageId,
+      threadId: `agentphone:${data.numberId ?? "unknown"}:${data.fromNumber}`,
+      user: {
+        fullName: data.fromNumber,
+        userId: data.fromNumber,
+        isBot: false,
+        isMe: false,
+        userName: data.fromNumber,
+      },
+      raw: data,
     });
 
     return new Response("OK", { status: 200 });

@@ -82,4 +82,4 @@ await adapter.addReaction(threadId, messageId, "love");
 
 - [AgentPhone docs](https://docs.agentphone.to)
 - [Chat SDK docs](https://chat-sdk.dev)
-- [GitHub](https://github.com/agentphone/chat-sdk-adapter)
+- [GitHub](https://github.com/AgentPhone-AI/chat-sdk-adapter)
