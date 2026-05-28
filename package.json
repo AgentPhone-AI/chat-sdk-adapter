@@ -1,0 +1,69 @@
+{
+  "name": "@agentphone/chat-sdk-adapter",
+  "version": "0.1.0",
+  "description": "AgentPhone adapter for Chat SDK — SMS, MMS, iMessage, and voice",
+  "author": "AgentPhone <founders@agentphone.to>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agentphone/chat-sdk-adapter.git"
+  },
+  "homepage": "https://agentphone.to",
+  "bugs": {
+    "url": "https://github.com/agentphone/chat-sdk-adapter/issues"
+  },
+  "keywords": [
+    "chat-sdk",
+    "chat-adapter",
+    "agentphone",
+    "sms",
+    "mms",
+    "imessage",
+    "voice",
+    "telephony",
+    "ai-agents"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "packageManager": "pnpm@10.30.1",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "prepublishOnly": "pnpm run build",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist coverage"
+  },
+  "dependencies": {
+    "@chat-adapter/shared": "^4.20.0"
+  },
+  "peerDependencies": {
+    "chat": "^4.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^2.1.8",
+    "chat": "^4.20.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
