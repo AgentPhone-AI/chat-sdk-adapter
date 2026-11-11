@@ -41,9 +41,22 @@ export interface AgentPhoneMessageWebhook {
     mediaUrls: string[];
     direction: "inbound" | "outbound";
     receivedAt: string;
+    /** Present only for a group thread. */
+    group?: AgentPhoneGroup;
+    /** The member who sent this message. Present only for a group thread. */
+    senderIdentifier?: string;
   };
   conversationState: Record<string, unknown> | null;
   recentHistory: AgentPhoneHistoryEntry[];
+}
+
+export interface AgentPhoneGroup {
+  isGroup: true;
+  /** Provider-assigned group identifier, the value a reply is sent to. */
+  groupId: string;
+  groupName: string | null;
+  groupIconUrl: string | null;
+  participants: { identifier: string; name: string | null }[];
 }
 
 export interface AgentPhoneCallEndedWebhook {
@@ -107,6 +120,8 @@ export interface AgentPhoneHistoryEntry {
   direction: "inbound" | "outbound";
   channel: string;
   at: string;
+  /** The member who sent this entry. Present only for a group thread. */
+  senderIdentifier?: string;
 }
 
 export interface AgentPhoneTranscriptEntry {

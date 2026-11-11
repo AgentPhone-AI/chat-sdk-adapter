@@ -167,7 +167,7 @@ export class AgentPhoneAdapter
 
     const threadId = this.encodeThreadId({
       agentPhoneNumber: data.to,
-      recipientNumber: data.from,
+      recipientNumber: inboundRecipient(data),
     });
 
     const message = this.parseMessage(data);
@@ -361,7 +361,7 @@ export class AgentPhoneAdapter
 
     const threadId = this.encodeThreadId({
       agentPhoneNumber: isMe ? raw.from : raw.to,
-      recipientNumber: isMe ? raw.to : raw.from,
+      recipientNumber: isMe ? raw.to : inboundRecipient(raw),
     });
 
     return new Message<AgentPhoneRawMessage>({
@@ -526,6 +526,12 @@ export class AgentPhoneAdapter
       return false;
     }
   }
+}
+
+// A reply to an iMessage group goes to the group's id. Sending to `data.from`
+// would start a one-to-one conversation with the member who wrote.
+function inboundRecipient(data: AgentPhoneMessageWebhook["data"]): string {
+  return data.group?.groupId ?? data.from;
 }
 
 function arrayBufferToHex(buffer: ArrayBuffer): string {
