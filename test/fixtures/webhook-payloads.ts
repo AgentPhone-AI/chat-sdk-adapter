@@ -112,6 +112,39 @@ export const inboundIMessage: AgentPhoneMessageWebhook = {
   ],
 };
 
+export const inboundGroupIMessage: AgentPhoneMessageWebhook = {
+  event: "agent.message",
+  channel: "imessage",
+  timestamp: "2025-06-01T10:02:30Z",
+  agentId: "agent_test123",
+  data: {
+    messageId: "msg_005",
+    conversationId: "conv_grp",
+    numberId: "num_xyz",
+    from: "+15551234567",
+    to: "+15559876543",
+    contact: null,
+    message: "Are we still on for Friday?",
+    mediaUrl: null,
+    mediaUrls: [],
+    direction: "inbound",
+    receivedAt: "2025-06-01T10:02:30Z",
+    senderIdentifier: "+15551234567",
+    group: {
+      isGroup: true,
+      groupId: "grp_abc123",
+      groupName: "Trip Planning",
+      groupIconUrl: null,
+      participants: [
+        { identifier: "+15555555555", name: null },
+        { identifier: "+15551234567", name: "Alice" },
+      ],
+    },
+  },
+  conversationState: null,
+  recentHistory: [],
+};
+
 export const outboundMessage: AgentPhoneMessageWebhook = {
   event: "agent.message",
   channel: "sms",

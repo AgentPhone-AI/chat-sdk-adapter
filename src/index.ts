@@ -6,6 +6,7 @@ export type {
   AgentPhoneAdapterConfig,
   AgentPhoneCallEndedWebhook,
   AgentPhoneContact,
+  AgentPhoneGroup,
   AgentPhoneHistoryEntry,
   AgentPhoneMessageWebhook,
   AgentPhoneRawMessage,

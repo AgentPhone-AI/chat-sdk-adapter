@@ -1,10 +1,12 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { AgentPhoneAdapter } from "../src/adapter";
+import type { AgentPhoneMessageWebhook } from "../src/types";
 import {
   createMockChat,
   inboundSMS,
   inboundMMS,
   inboundIMessage,
+  inboundGroupIMessage,
   outboundMessage,
   callEnded,
   inboundReaction,
@@ -411,6 +413,67 @@ describe("AgentPhoneAdapter", () => {
       ).rejects.toThrow("Auth failed");
 
       vi.restoreAllMocks();
+    });
+  });
+
+  describe("iMessage group threads", () => {
+    const sendResponse = {
+      id: "msg_new",
+      status: "sent",
+      channel: "imessage",
+      from_number: "+15559876543",
+      to_number: "grp_abc123",
+      media_urls: [],
+      reply_to_message_id: null,
+      reply_parent_unresolved: null,
+    };
+
+    async function replyTo(payload: AgentPhoneMessageWebhook) {
+      const adapter = new AgentPhoneAdapter({
+        ...DEFAULT_CONFIG,
+        webhookSecret: undefined,
+      });
+      const mockChat = createMockChat();
+      await adapter.initialize(mockChat);
+
+      const req = new Request("https://example.com/webhook", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
+      });
+      await adapter.handleWebhook(req);
+      const threadId = vi.mocked(mockChat.processMessage).mock.calls[0]![1];
+
+      vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+        new Response(JSON.stringify(sendResponse), { status: 200 })
+      );
+      await adapter.postMessage(threadId, "Friday works");
+      const fetchCall = vi.mocked(fetch).mock.calls[0]!;
+      const body = JSON.parse((fetchCall[1] as RequestInit).body as string);
+      vi.restoreAllMocks();
+      return { threadId, body };
+    }
+
+    it("replies to the group, not to the member who wrote", async () => {
+      const { body } = await replyTo(inboundGroupIMessage);
+      expect(body.to_number).toBe("grp_abc123");
+    });
+
+    it("puts the group id in the thread id", async () => {
+      const { threadId } = await replyTo(inboundGroupIMessage);
+      expect(threadId).toBe("agentphone:+15559876543:grp_abc123");
+    });
+
+    it("keeps the author as data.from", () => {
+      const adapter = new AgentPhoneAdapter(DEFAULT_CONFIG);
+      const msg = adapter.parseMessage(inboundGroupIMessage.data);
+      expect(msg.threadId).toBe("agentphone:+15559876543:grp_abc123");
+      expect(msg.author.userId).toBe("+15551234567");
+    });
+
+    it("replies to the sender in a one-to-one iMessage", async () => {
+      const { body } = await replyTo(inboundIMessage);
+      expect(body.to_number).toBe("+15551234567");
     });
   });
 
